@@ -2,15 +2,16 @@ from flask import Flask, render_template, request, redirect, session
 import sqlite3
 import requests
 import markdown
+import os
 
 app = Flask(__name__)
 app.secret_key = "fitmindai"
 
 # =========================
-# CHAVE DA GROQ
+# CHAVE API
 # =========================
 
-API_KEY = ""
+API_KEY = os.getenv("API_KEY")
 
 # =========================
 # CRIAR BANCO
@@ -42,8 +43,8 @@ def login():
 
     if request.method == "POST":
 
-        usuario = request.form["usuario"]
-        senha = request.form["senha"]
+        usuario = request.form.get("usuario", "")
+        senha = request.form.get("senha", "")
 
         conn = sqlite3.connect("usuarios.db")
         cursor = conn.cursor()
@@ -54,7 +55,6 @@ def login():
         )
 
         user = cursor.fetchone()
-
         conn.close()
 
         if user:
@@ -72,8 +72,8 @@ def cadastro():
 
     if request.method == "POST":
 
-        usuario = request.form["usuario"]
-        senha = request.form["senha"]
+        usuario = request.form.get("usuario", "")
+        senha = request.form.get("senha", "")
 
         conn = sqlite3.connect("usuarios.db")
         cursor = conn.cursor()
@@ -104,19 +104,19 @@ def home():
 
     if request.method == "POST":
 
-        objetivo = request.form["objetivo"]
-        peso = request.form["peso"]
-        dias = request.form["dias"]
-        intensidade = request.form["intensidade"]
+        objetivo = request.form.get("objetivo", "")
+        peso = request.form.get("peso", "")
+        dias = request.form.get("dias", "")
+        intensidade = request.form.get("intensidade", "moderado")
 
-        treino_segunda = request.form["segunda"]
-        treino_terca = request.form["terca"]
-        treino_quarta = request.form["quarta"]
-        treino_quinta = request.form["quinta"]
-        treino_sexta = request.form["sexta"]
+        treino_segunda = request.form.get("segunda", "")
+        treino_terca = request.form.get("terca", "")
+        treino_quarta = request.form.get("quarta", "")
+        treino_quinta = request.form.get("quinta", "")
+        treino_sexta = request.form.get("sexta", "")
 
         prompt = f"""
-Crie um treino EXTREMAMENTE ORGANIZADO.
+Crie um treino extremamente organizado.
 
 Objetivo: {objetivo}
 Peso: {peso}
@@ -148,35 +148,11 @@ Organize assim:
 - repetições
 - descanso
 
-## Terça-feira
-
-## Quarta-feira
-
-## Quinta-feira
-
-## Sexta-feira
-
 # CARDIO
 
 # ALIMENTAÇÃO
 
-## Alimentos recomendados para cada treino
-
-## Café da manhã
-
-## Pré treino
-
-## Pós treino
-
-## Jantar
-
-## Alimentos proibidos
-
-## Alimentos liberados às vezes
-
 # DICAS IMPORTANTES
-
-Deixe bonito e organizado.
 """
 
         headers = {
@@ -231,7 +207,6 @@ Deixe bonito e organizado.
 def logout():
 
     session.clear()
-
     return redirect("/")
 
 # =========================
