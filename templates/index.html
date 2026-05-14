@@ -6,168 +6,185 @@
 
 <title>FitMind AI</title>
 
-<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-<style>
-body{
-    margin:0;
-    background:#050505;
-    color:white;
-    font-family:Arial;
-}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-.container{
-    display:flex;
-    flex-wrap:wrap;
-    min-height:100vh;
-}
-
-.sidebar{
-    width:320px;
-    background:#0d0d0d;
-    padding:20px;
-    box-shadow:0 0 20px #00ff88;
-}
-
-.logo{
-    font-size:35px;
-    color:#00ff88;
-    font-weight:bold;
-    margin-bottom:20px;
-}
-
-form{
-    display:flex;
-    flex-direction:column;
-}
-
-input,select{
-    margin-bottom:15px;
-    padding:15px;
-    border:none;
-    border-radius:10px;
-    background:#1b1b1b;
-    color:white;
-    font-size:15px;
-}
-
-button{
-    background:#00ff88;
-    border:none;
-    padding:15px;
-    border-radius:10px;
-    font-size:18px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.main{
-    flex:1;
-    padding:30px;
-}
-
-.titulo{
-    font-size:40px;
-    color:#00ff88;
-    margin-bottom:20px;
-}
-
-.card{
-    background:#111;
-    border:1px solid #00ff88;
-    border-radius:15px;
-    padding:20px;
-    margin-bottom:20px;
-    box-shadow:0 0 10px #00ff88;
-}
-
-.card h2{
-    color:#00ff88;
-}
-
-.resultado{
-    white-space:pre-wrap;
-    line-height:1.8;
-    font-size:15px;
-}
-
-@media(max-width:900px){
-    .container{
-        flex-direction:column;
-    }
-
-    .sidebar{
-        width:100%;
-    }
-}
-</style>
+<script src="https://unpkg.com/lucide@latest"></script>
 
 </head>
 
 <body>
 
-<div class="container">
+<div class="app">
 
-<div class="sidebar">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
 
-<div class="logo">
-FitMind AI 🔥
+        <div class="logo-area">
+            <h1>FitMind AI 🔥</h1>
+            <p>Seu personal trainer inteligente</p>
+        </div>
+
+        <form method="POST" action="/gerar" class="form-area">
+
+            <div class="input-group">
+                <label>Objetivo</label>
+                <input type="text" name="objetivo" placeholder="Ex: Hipertrofia">
+            </div>
+
+            <div class="input-group">
+                <label>Peso</label>
+                <input type="text" name="peso" placeholder="Ex: 80kg">
+            </div>
+
+            <div class="input-group">
+                <label>Altura</label>
+                <input type="text" name="altura" placeholder="Ex: 1.80">
+            </div>
+
+            <div class="input-group">
+                <label>Nível</label>
+
+                <select name="nivel">
+                    <option>Leve</option>
+                    <option>Moderado</option>
+                    <option>Pesado</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Dias disponíveis</label>
+
+                <select name="dias">
+                    <option>3 dias</option>
+                    <option>4 dias</option>
+                    <option>5 dias</option>
+                    <option>6 dias</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-gerar">
+                <i data-lucide="sparkles"></i>
+                Gerar treino
+            </button>
+
+        </form>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <div class="topbar">
+
+            <div>
+                <h2>Seu Plano Personalizado</h2>
+                <p>Plano completo baseado nos seus objetivos</p>
+            </div>
+
+            <div class="top-buttons">
+                <button class="mini-btn">
+                    <i data-lucide="download"></i>
+                    Baixar
+                </button>
+
+                <button class="mini-btn">
+                    <i data-lucide="printer"></i>
+                    Imprimir
+                </button>
+            </div>
+
+        </div>
+
+        <!-- CARDS INFO -->
+        <div class="info-grid">
+
+            <div class="info-card">
+                <i data-lucide="target"></i>
+                <span>Objetivo</span>
+                <strong>{{ request.form.get('objetivo', '-') }}</strong>
+            </div>
+
+            <div class="info-card">
+                <i data-lucide="dumbbell"></i>
+                <span>Nível</span>
+                <strong>{{ request.form.get('nivel', '-') }}</strong>
+            </div>
+
+            <div class="info-card">
+                <i data-lucide="weight"></i>
+                <span>Peso</span>
+                <strong>{{ request.form.get('peso', '-') }}</strong>
+            </div>
+
+            <div class="info-card">
+                <i data-lucide="ruler"></i>
+                <span>Altura</span>
+                <strong>{{ request.form.get('altura', '-') }}</strong>
+            </div>
+
+        </div>
+
+        {% if resposta %}
+
+        <div class="resultado-box">
+
+            <div class="resultado-header">
+                <i data-lucide="sparkles"></i>
+                <h3>Treino gerado pela IA</h3>
+            </div>
+
+            <div class="resultado-texto">
+                {{ resposta }}
+            </div>
+
+        </div>
+
+        {% endif %}
+
+        <!-- RECOMENDAÇÕES -->
+        <div class="recomendacoes">
+
+            <h3>
+                <i data-lucide="badge-check"></i>
+                Recomendações Gerais
+            </h3>
+
+            <div class="recomendacoes-grid">
+
+                <div class="reco-card">
+                    <h4>🍗 Proteínas</h4>
+                    <p>Frango, ovos, peixe, whey e carnes magras.</p>
+                </div>
+
+                <div class="reco-card">
+                    <h4>🍞 Carboidratos</h4>
+                    <p>Arroz, aveia, batata doce e frutas.</p>
+                </div>
+
+                <div class="reco-card">
+                    <h4>🥑 Gorduras boas</h4>
+                    <p>Castanhas, azeite, pasta de amendoim.</p>
+                </div>
+
+                <div class="reco-card">
+                    <h4>💧 Hidratação</h4>
+                    <p>Beba bastante água durante o dia.</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
 </div>
 
-<form method="POST" action="/gerar">
-
-<input type="text" name="objetivo" placeholder="Seu objetivo">
-
-<input type="text" name="peso" placeholder="Seu peso">
-
-<input type="text" name="altura" placeholder="Sua altura">
-
-<select name="nivel">
-<option>Leve</option>
-<option>Moderado</option>
-<option>Pesado</option>
-</select>
-
-<input type="text" name="segunda" placeholder="Treino de segunda">
-
-<input type="text" name="terca" placeholder="Treino de terça">
-
-<input type="text" name="quarta" placeholder="Treino de quarta">
-
-<input type="text" name="quinta" placeholder="Treino de quinta">
-
-<input type="text" name="sexta" placeholder="Treino de sexta">
-
-<button type="submit">
-Gerar treino
-</button>
-
-</form>
-
-</div>
-
-<div class="main">
-
-<div class="titulo">
-Seu Plano de Treino
-</div>
-
-{% if resposta %}
-
-<div class="card">
-<h2>Treino personalizado</h2>
-
-<div class="resultado">
-{{ resposta }}
-</div>
-
-</div>
-
-{% endif %}
-
-</div>
-
-</div>
+<script>
+lucide.createIcons();
+</script>
 
 </body>
 </html>
