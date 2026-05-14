@@ -84,6 +84,8 @@ font-size:18px;
 font-weight:600;
 cursor:pointer;
 color:black;
+margin-top:20px;
+width:100%;
 }
 
 .grid{
@@ -112,6 +114,19 @@ color:#ccc;
 line-height:1.7;
 }
 
+input,
+select{
+width:100%;
+margin-top:10px;
+padding:16px;
+background:#101010;
+border:1px solid #222;
+border-radius:15px;
+color:white;
+font-size:16px;
+outline:none;
+}
+
 .section-title{
 font-size:30px;
 margin:40px 0 20px;
@@ -132,20 +147,11 @@ margin-bottom:20px;
 font-size:28px;
 }
 
-table{
-width:100%;
-border-collapse:collapse;
-}
-
-table th{
-background:#151515;
-padding:15px;
-color:#00ff88;
-}
-
-table td{
-padding:15px;
-border-bottom:1px solid #222;
+.resultado{
+line-height:1.9;
+color:#ddd;
+white-space:pre-wrap;
+font-size:16px;
 }
 
 .footer{
@@ -196,12 +202,139 @@ Plano de treino inteligente
 
 </div>
 
+</div>
+
 <form action="/gerar" method="POST">
 
+<div class="grid">
+
+<div class="card">
+
+<h3>🎯 Objetivo</h3>
+
+<input type="text"
+name="objetivo"
+placeholder="Ex: Hipertrofia"
+required>
+
+</div>
+
+<div class="card">
+
+<h3>⚖️ Peso</h3>
+
+<input type="text"
+name="peso"
+placeholder="Ex: 80kg"
+required>
+
+</div>
+
+<div class="card">
+
+<h3>📏 Altura</h3>
+
+<input type="text"
+name="altura"
+placeholder="Ex: 1.80"
+required>
+
+</div>
+
+<div class="card">
+
+<h3>🔥 Nível</h3>
+
+<select name="nivel">
+
+<option>Leve</option>
+<option>Moderado</option>
+<option>Pesado</option>
+<option>Extremo</option>
+
+</select>
+
+</div>
+
+<div class="card">
+
+<h3>📅 Segunda</h3>
+
+<input type="text"
+name="segunda"
+placeholder="Ex: Peito e tríceps">
+
+</div>
+
+<div class="card">
+
+<h3>📅 Terça</h3>
+
+<input type="text"
+name="terca"
+placeholder="Ex: Costas e bíceps">
+
+</div>
+
+<div class="card">
+
+<h3>📅 Quarta</h3>
+
+<input type="text"
+name="quarta"
+placeholder="Ex: Pernas">
+
+</div>
+
+<div class="card">
+
+<h3>📅 Quinta</h3>
+
+<input type="text"
+name="quinta"
+placeholder="Ex: Ombro">
+
+</div>
+
+<div class="card">
+
+<h3>📅 Sexta</h3>
+
+<input type="text"
+name="sexta"
+placeholder="Ex: Cardio e abdômen">
+
+</div>
+
+</div>
+
 <button class="generate-btn">
-Gerar treino
+🚀 Gerar treino inteligente
 </button>
 
 </form>
 
+{% if resposta %}
+
+<div class="section-title">
+🔥 Seu Plano de Treino
 </div>
+
+<div class="workout">
+
+<div class="resultado">
+{{ resposta|safe }}
+</div>
+
+</div>
+
+{% endif %}
+
+<div class="footer">
+🔥 FOCO • DISCIPLINA • RESULTADOS 🔥
+</div>
+
+</div>
+
+</body>
+</html>
