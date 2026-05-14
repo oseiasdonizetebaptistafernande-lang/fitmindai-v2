@@ -1,137 +1,24 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request
 from groq import Groq
-import sqlite3
 import os
-import markdown
 
 app = Flask(__name__)
-
-app.secret_key = "fitmindai"
-
-# =========================
-# API GROQ
-# =========================
 
 client = Groq(
     api_key=os.getenv("GROQ_API_KEY")
 )
 
-# =========================
-# CRIAR BANCO
-# =========================
-
-def criar_banco():
-
-    conn = sqlite3.connect("usuarios.db")
-
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS usuarios (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        usuario TEXT,
-        senha TEXT
-    )
-    """)
-
-    conn.commit()
-    conn.close()
-
-criar_banco()
-
-# =========================
-# LOGIN
-# =========================
-
-@app.route("/", methods=["GET", "POST"])
-def login():
-
-    if request.method == "POST":
-
-        usuario = request.form.get("usuario")
-        senha = request.form.get("senha")
-
-        conn = sqlite3.connect("usuarios.db")
-
-        cursor = conn.cursor()
-
-        cursor.execute(
-            "SELECT * FROM usuarios WHERE usuario=? AND senha=?",
-            (usuario, senha)
-        )
-
-        user = cursor.fetchone()
-
-        conn.close()
-
-        if user:
-
-            session["usuario"] = usuario
-
-            return redirect("/home")
-
-    return render_template("login.html")
-
-# =========================
-# CADASTRO
-# =========================
-
-@app.route("/cadastro", methods=["GET", "POST"])
-def cadastro():
-
-    if request.method == "POST":
-
-        usuario = request.form.get("usuario")
-        senha = request.form.get("senha")
-
-        conn = sqlite3.connect("usuarios.db")
-
-        cursor = conn.cursor()
-
-        cursor.execute(
-            "INSERT INTO usuarios (usuario, senha) VALUES (?, ?)",
-            (usuario, senha)
-        )
-
-        conn.commit()
-        conn.close()
-
-        return redirect("/")
-
-    return render_template("cadastro.html")
-
-# =========================
-# HOME
-# =========================
-
-@app.route("/home")
+@app.route("/")
 def home():
-
-    if "usuario" not in session:
-
-        return redirect("/")
-
-    return render_template(
-        "index.html",
-        usuario=session["usuario"]
-    )
-
-# =========================
-# GERAR TREINO
-# =========================
+    return render_template("index.html")
 
 @app.route("/gerar", methods=["POST"])
 def gerar():
-
-    if "usuario" not in session:
-
-        return redirect("/")
 
     objetivo = request.form.get("objetivo")
     peso = request.form.get("peso")
     altura = request.form.get("altura")
     nivel = request.form.get("nivel")
-    dias = request.form.get("dias")
 
     segunda = request.form.get("segunda")
     terca = request.form.get("terca")
@@ -142,108 +29,73 @@ def gerar():
     prompt = f"""
 Você é um personal trainer profissional.
 
-Crie um treino extremamente organizado e bonito.
+Crie um plano de treino COMPLETAMENTE EM HTML.
+
+NÃO use markdown.
+NÃO use texto puro.
+
+Crie um visual organizado.
 
 Use:
 
-# títulos
-## subtítulos
-- listas
-- divisões organizadas
-- separações profissionais
+<div>
+<h2>
+<h3>
+<table>
+<tr>
+<td>
+<ul>
+<li>
 
-Objetivo:
-{objetivo}
+Organize:
 
-Peso:
-{peso}
-
-Altura:
-{altura}
-
-Nível:
-{nivel}
-
-Dias disponíveis:
-{dias}
-
-DIVISÃO DOS TREINOS:
-
-Segunda:
-{segunda}
-
-Terça:
-{terca}
-
-Quarta:
-{quarta}
-
-Quinta:
-{quinta}
-
-Sexta:
-{sexta}
-
-IMPORTANTE:
-
-- treino organizado
-- exercícios separados
+- informações do cliente
+- divisão dos treinos
+- exercícios
 - séries
 - repetições
 - descanso
 - cardio
 - alimentação
-- alimentos recomendados
-- alimentos proibidos
-- motivação
 
-Deixe tudo moderno e profissional.
+Cada treino deve ficar separado.
+
+Crie tabelas para exercícios.
+
+Cliente:
+
+Objetivo: {objetivo}
+Peso: {peso}
+Altura: {altura}
+Nível: {nivel}
+
+Treinos:
+
+Segunda: {segunda}
+Terça: {terca}
+Quarta: {quarta}
+Quinta: {quinta}
+Sexta: {sexta}
+
 """
 
-    try:
+    resposta = client.chat.completions.create(
+        model="llama3-70b-8192",
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        temperature=0.7
+    )
 
-        resposta_ia = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ]
-        )
-
-        treino = markdown.markdown(
-            resposta_ia.choices[0].message.content
-        )
-
-    except Exception as erro:
-
-        treino = f"""
-<h2>Erro da IA</h2>
-<p>{erro}</p>
-"""
+    resultado = resposta.choices[0].message.content
 
     return render_template(
         "index.html",
-        resposta=treino,
-        usuario=session["usuario"]
+        resposta=resultado
     )
 
-# =========================
-# LOGOUT
-# =========================
-
-@app.route("/logout")
-def logout():
-
-    session.clear()
-
-    return redirect("/")
-
-# =========================
-# RODAR APP
-# =========================
-
 if __name__ == "__main__":
-
-    app.run(host="0.0.0.0", port=5000)
+    app.run(debug=True)

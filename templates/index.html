@@ -75,19 +75,6 @@ font-size:20px;
 margin-top:5px;
 }
 
-.generate-btn{
-background:#00ff88;
-border:none;
-padding:18px 30px;
-border-radius:18px;
-font-size:18px;
-font-weight:600;
-cursor:pointer;
-color:black;
-margin-top:20px;
-width:100%;
-}
-
 .grid{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
@@ -109,11 +96,6 @@ margin-bottom:15px;
 font-size:22px;
 }
 
-.card p{
-color:#ccc;
-line-height:1.7;
-}
-
 input,
 select{
 width:100%;
@@ -127,31 +109,66 @@ font-size:16px;
 outline:none;
 }
 
-.section-title{
-font-size:30px;
-margin:40px 0 20px;
-color:#00ff88;
-}
-
-.workout{
-background:#0c0c0c;
-border-radius:25px;
-padding:30px;
-margin-bottom:25px;
-border:1px solid #1f1f1f;
-}
-
-.workout h2{
-color:#00ff88;
-margin-bottom:20px;
-font-size:28px;
+.generate-btn{
+background:#00ff88;
+border:none;
+padding:18px 30px;
+border-radius:18px;
+font-size:18px;
+font-weight:700;
+cursor:pointer;
+color:black;
+width:100%;
+margin-top:20px;
+box-shadow:0 0 20px rgba(0,255,120,0.3);
 }
 
 .resultado{
-line-height:1.9;
-color:#ddd;
-white-space:pre-wrap;
-font-size:16px;
+margin-top:50px;
+background:#0b0b0b;
+border:1px solid #1f1f1f;
+border-radius:25px;
+padding:30px;
+overflow:auto;
+}
+
+.resultado h2{
+color:#00ff88;
+margin:30px 0 20px;
+font-size:35px;
+}
+
+.resultado h3{
+color:#00ff88;
+margin:20px 0;
+font-size:24px;
+}
+
+.resultado table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+margin-bottom:25px;
+}
+
+.resultado table th{
+background:#111;
+padding:15px;
+color:#00ff88;
+}
+
+.resultado table td{
+padding:15px;
+border-bottom:1px solid #222;
+}
+
+.resultado ul{
+padding-left:20px;
+line-height:2;
+}
+
+.resultado li{
+margin-bottom:10px;
 }
 
 .footer{
@@ -168,8 +185,8 @@ font-weight:700;
 font-size:30px;
 }
 
-.section-title{
-font-size:24px;
+.resultado h2{
+font-size:28px;
 }
 
 }
@@ -214,7 +231,7 @@ Plano de treino inteligente
 
 <input type="text"
 name="objetivo"
-placeholder="Ex: Hipertrofia"
+placeholder="Hipertrofia"
 required>
 
 </div>
@@ -225,7 +242,7 @@ required>
 
 <input type="text"
 name="peso"
-placeholder="Ex: 80kg"
+placeholder="80kg"
 required>
 
 </div>
@@ -236,7 +253,7 @@ required>
 
 <input type="text"
 name="altura"
-placeholder="Ex: 1.80"
+placeholder="1.80"
 required>
 
 </div>
@@ -250,7 +267,6 @@ required>
 <option>Leve</option>
 <option>Moderado</option>
 <option>Pesado</option>
-<option>Extremo</option>
 
 </select>
 
@@ -262,7 +278,7 @@ required>
 
 <input type="text"
 name="segunda"
-placeholder="Ex: Peito e tríceps">
+placeholder="Peito e tríceps">
 
 </div>
 
@@ -272,7 +288,7 @@ placeholder="Ex: Peito e tríceps">
 
 <input type="text"
 name="terca"
-placeholder="Ex: Costas e bíceps">
+placeholder="Costas e bíceps">
 
 </div>
 
@@ -282,7 +298,7 @@ placeholder="Ex: Costas e bíceps">
 
 <input type="text"
 name="quarta"
-placeholder="Ex: Pernas">
+placeholder="Pernas">
 
 </div>
 
@@ -292,7 +308,7 @@ placeholder="Ex: Pernas">
 
 <input type="text"
 name="quinta"
-placeholder="Ex: Ombro">
+placeholder="Ombro">
 
 </div>
 
@@ -302,7 +318,7 @@ placeholder="Ex: Ombro">
 
 <input type="text"
 name="sexta"
-placeholder="Ex: Cardio e abdômen">
+placeholder="Cardio">
 
 </div>
 
@@ -316,15 +332,9 @@ placeholder="Ex: Cardio e abdômen">
 
 {% if resposta %}
 
-<div class="section-title">
-🔥 Seu Plano de Treino
-</div>
-
-<div class="workout">
-
 <div class="resultado">
+
 {{ resposta|safe }}
-</div>
 
 </div>
 
