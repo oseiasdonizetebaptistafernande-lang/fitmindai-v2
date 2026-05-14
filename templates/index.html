@@ -19,34 +19,13 @@ href="/static/style.css">
 
 <div class="container">
 
-<div class="topo">
-
-<div>
-
 <h1>FitMind AI 🔥</h1>
 
-<p class="subtitulo">
-Seu personal trainer inteligente
-</p>
-
-</div>
-
-<a href="/logout" class="logout">
-Sair
-</a>
-
-</div>
-
-<div class="usuario-box">
-
 <p>
-Bem-vindo,
-<strong>{{ usuario }}</strong>
+Bem-vindo {{ usuario }}
 </p>
 
-</div>
-
-<form action="/home" method="POST">
+<form action="/gerar" method="POST">
 
 <input
 type="text"
@@ -54,50 +33,6 @@ name="objetivo"
 placeholder="Seu objetivo"
 required
 >
-
-<select name="tipo_treino" required>
-
-<option value="">
-Escolha o tipo de treino
-</option>
-
-<option value="hipertrofia">
-Hipertrofia
-</option>
-
-<option value="emagrecimento">
-Emagrecimento
-</option>
-
-<option value="definicao">
-Definição
-</option>
-
-<option value="funcional">
-Funcional
-</option>
-
-<option value="calistenia">
-Calistenia
-</option>
-
-<option value="cardio">
-Cardio
-</option>
-
-<option value="powerlifting">
-Powerlifting
-</option>
-
-<option value="fitness feminino">
-Fitness Feminino
-</option>
-
-<option value="treino extremo">
-Treino Extremo
-</option>
-
-</select>
 
 <input
 type="text"
@@ -108,10 +43,30 @@ required
 
 <input
 type="text"
-name="dias"
-placeholder="Dias de treino"
+name="altura"
+placeholder="Sua altura"
 required
 >
+
+<select name="intensidade">
+
+<option value="leve">
+Leve
+</option>
+
+<option value="moderado">
+Moderado
+</option>
+
+<option value="pesado">
+Pesado
+</option>
+
+<option value="extremo">
+Extremo
+</option>
+
+</select>
 
 <input
 type="text"
@@ -148,87 +103,9 @@ placeholder="Treino de sexta"
 required
 >
 
-<select name="nivel" required>
-
-<option value="">
-Seu nível
-</option>
-
-<option value="iniciante">
-Iniciante
-</option>
-
-<option value="moderado">
-Moderado
-</option>
-
-<option value="avancado">
-Avançado
-</option>
-
-<option value="hardcore">
-Hardcore
-</option>
-
-</select>
-
-<select name="modo" required>
-
-<option value="">
-Modo de treino
-</option>
-
-<option value="normal">
-Normal
-</option>
-
-<option value="guerreiro">
-Guerreiro
-</option>
-
-<option value="beastmode">
-Beast Mode
-</option>
-
-<option value="limite">
-Até o Limite
-</option>
-
-</select>
-
-<select name="resultado" required>
-
-<option value="">
-Velocidade do resultado
-</option>
-
-<option value="leve">
-Tranquilo
-</option>
-
-<option value="rapido">
-Rápido
-</option>
-
-<option value="extremo">
-O mais rápido possível
-</option>
-
-</select>
-
-<input
-type="text"
-name="limitacoes"
-placeholder="Lesões ou limitações"
->
-
 <button type="submit">
 Gerar treino
 </button>
-
-<div id="loading">
-Gerando treino extremo...
-</div>
 
 </form>
 
@@ -236,32 +113,17 @@ Gerando treino extremo...
 
 <div class="resultado">
 
-<h2>Seu treino personalizado</h2>
-
-<div class="markdown">
-{{ treino|safe }}
-</div>
+<pre>{{ treino }}</pre>
 
 </div>
 
 {% endif %}
 
+<a href="/logout">
+Sair
+</a>
+
 </div>
-
-<script>
-
-const form = document.querySelector("form")
-const loading = document.querySelector("#loading")
-
-loading.style.display = "none"
-
-form.addEventListener("submit", () => {
-
-loading.style.display = "block"
-
-})
-
-</script>
 
 </body>
 </html>

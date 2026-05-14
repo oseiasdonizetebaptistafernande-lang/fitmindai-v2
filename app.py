@@ -1,24 +1,28 @@
 from flask import Flask, render_template, request, redirect, session
+from groq import Groq
 import sqlite3
-import requests
-import markdown
 import os
 
 app = Flask(__name__)
+
 app.secret_key = "fitmindai"
 
 # =========================
-# CHAVE API
+# API DA GROQ
 # =========================
 
-API_KEY = os.getenv("API_KEY")
+client = Groq(
+    api_key=os.getenv("API_KEY")
+)
 
 # =========================
-# CRIAR BANCO
+# BANCO DE DADOS
 # =========================
 
 def criar_banco():
+
     conn = sqlite3.connect("usuarios.db")
+
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -43,8 +47,8 @@ def login():
 
     if request.method == "POST":
 
-        usuario = request.form.get("usuario", "")
-        senha = request.form.get("senha", "")
+        usuario = request.form.get("usuario")
+        senha = request.form.get("senha")
 
         conn = sqlite3.connect("usuarios.db")
         cursor = conn.cursor()
@@ -55,10 +59,13 @@ def login():
         )
 
         user = cursor.fetchone()
+
         conn.close()
 
         if user:
+
             session["usuario"] = usuario
+
             return redirect("/home")
 
     return render_template("login.html")
@@ -72,10 +79,11 @@ def cadastro():
 
     if request.method == "POST":
 
-        usuario = request.form.get("usuario", "")
-        senha = request.form.get("senha", "")
+        usuario = request.form.get("usuario")
+        senha = request.form.get("senha")
 
         conn = sqlite3.connect("usuarios.db")
+
         cursor = conn.cursor()
 
         cursor.execute(
@@ -94,108 +102,113 @@ def cadastro():
 # HOME
 # =========================
 
-@app.route("/home", methods=["GET", "POST"])
+@app.route("/home")
 def home():
 
     if "usuario" not in session:
         return redirect("/")
 
-    resultado = ""
+    return render_template(
+        "index.html",
+        usuario=session["usuario"]
+    )
 
-    if request.method == "POST":
+# =========================
+# GERAR TREINO
+# =========================
 
-        objetivo = request.form.get("objetivo", "")
-        peso = request.form.get("peso", "")
-        dias = request.form.get("dias", "")
-        intensidade = request.form.get("intensidade", "moderado")
+@app.route("/gerar", methods=["POST"])
+def gerar():
 
-        treino_segunda = request.form.get("segunda", "")
-        treino_terca = request.form.get("terca", "")
-        treino_quarta = request.form.get("quarta", "")
-        treino_quinta = request.form.get("quinta", "")
-        treino_sexta = request.form.get("sexta", "")
+    if "usuario" not in session:
+        return redirect("/")
 
-        prompt = f"""
-Crie um treino extremamente organizado.
+    objetivo = request.form.get("objetivo")
+    peso = request.form.get("peso")
+    altura = request.form.get("altura")
+    intensidade = request.form.get("intensidade")
 
-Objetivo: {objetivo}
-Peso: {peso}
-Dias: {dias}
-Intensidade: {intensidade}
+    segunda = request.form.get("segunda")
+    terca = request.form.get("terca")
+    quarta = request.form.get("quarta")
+    quinta = request.form.get("quinta")
+    sexta = request.form.get("sexta")
 
-SEGUNDA:
-{treino_segunda}
+    prompt = f"""
+Você é um personal trainer profissional.
 
-TERÇA:
-{treino_terca}
+Crie um treino EXTREMAMENTE ORGANIZADO.
 
-QUARTA:
-{treino_quarta}
+Objetivo:
+{objetivo}
 
-QUINTA:
-{treino_quinta}
+Peso:
+{peso}
 
-SEXTA:
-{treino_sexta}
+Altura:
+{altura}
 
-Organize assim:
+Intensidade:
+{intensidade}
 
-# DIVISÃO SEMANAL
+DIVISÃO:
 
-## Segunda-feira
-- exercícios
+Segunda:
+{segunda}
+
+Terça:
+{terca}
+
+Quarta:
+{quarta}
+
+Quinta:
+{quinta}
+
+Sexta:
+{sexta}
+
+IMPORTANTE:
+
+- treino organizado
+- exercícios separados
 - séries
 - repetições
 - descanso
+- cardio
+- alimentação
+- alimentos recomendados
+- alimentos proibidos
+- motivação
 
-# CARDIO
-
-# ALIMENTAÇÃO
-
-# DICAS IMPORTANTES
+Deixe tudo bonito.
 """
 
-        headers = {
-            "Authorization": f"Bearer {API_KEY}",
-            "Content-Type": "application/json"
-        }
+    try:
 
-        data = {
-            "model": "llama-3.3-70b-versatile",
-            "messages": [
+        resposta = client.chat.completions.create(
+            model="llama3-70b-8192",
+            messages=[
                 {
                     "role": "user",
                     "content": prompt
                 }
             ]
-        }
+        )
 
-        try:
+        treino = resposta.choices[0].message.content
 
-            resposta = requests.post(
-                "https://api.groq.com/openai/v1/chat/completions",
-                headers=headers,
-                json=data
-            )
+    except Exception as erro:
 
-            resposta_json = resposta.json()
+        treino = f"""
+Erro da IA:
 
-            texto = resposta_json["choices"][0]["message"]["content"]
-
-            resultado = markdown.markdown(texto)
-
-        except Exception as erro:
-
-            resultado = f"""
-            <div class='erro'>
-                <h2>Erro da API</h2>
-                <p>{erro}</p>
-            </div>
-            """
+{erro}
+"""
 
     return render_template(
         "index.html",
-        resultado=resultado,
+        treino=treino,
         usuario=session["usuario"]
     )
 
@@ -207,6 +220,7 @@ Organize assim:
 def logout():
 
     session.clear()
+
     return redirect("/")
 
 # =========================
