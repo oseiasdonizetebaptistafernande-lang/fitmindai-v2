@@ -1,0 +1,184 @@
+body{
+    background:#050505;
+    color:white;
+    font-family:Arial, sans-serif;
+    margin:0;
+    padding:20px;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+    background:#101010;
+    padding:30px;
+    border-radius:30px;
+    box-shadow:0 0 40px #00ff88;
+}
+
+.auth-container{
+    max-width:420px;
+    margin:auto;
+    margin-top:80px;
+    background:#101010;
+    padding:30px;
+    border-radius:30px;
+    box-shadow:0 0 40px #00ff88;
+}
+
+.topo{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+h1{
+    color:#00ff88;
+    font-size:45px;
+    margin:0;
+}
+
+.subtitulo{
+    color:#999;
+    margin-top:8px;
+    font-size:18px;
+}
+
+.usuario-box{
+    margin-top:25px;
+    background:#0d0d0d;
+    padding:20px;
+    border-radius:20px;
+    border:1px solid #00ff88;
+    font-size:18px;
+}
+
+form{
+    display:flex;
+    flex-direction:column;
+    margin-top:25px;
+}
+
+input,
+select{
+    margin-top:16px;
+    padding:18px;
+    border:none;
+    border-radius:18px;
+    background:#1b1b1b;
+    color:white;
+    font-size:17px;
+    outline:none;
+}
+
+input:focus,
+select:focus{
+    border:2px solid #00ff88;
+}
+
+button{
+    margin-top:25px;
+    padding:20px;
+    border:none;
+    border-radius:18px;
+    background:#00ff88;
+    color:black;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.logout{
+    background:#ff3b3b;
+    color:white;
+    padding:14px 20px;
+    border-radius:15px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.link-auth{
+    display:block;
+    text-align:center;
+    margin-top:20px;
+    color:#00ff88;
+    text-decoration:none;
+}
+
+.resultado{
+    margin-top:40px;
+}
+
+/* TÍTULOS PRINCIPAIS */
+
+.markdown h1{
+    background:#00ff88;
+    color:black;
+    padding:22px;
+    border-radius:22px;
+    text-align:center;
+    font-size:32px;
+    margin-top:40px;
+}
+
+/* SUBTÍTULOS */
+
+.markdown h2{
+    background:#151515;
+    color:#00ff88;
+    padding:20px;
+    border-radius:20px;
+    text-align:center;
+    font-size:28px;
+    margin-top:30px;
+    border-left:6px solid #00ff88;
+}
+
+/* CARD DOS EXERCÍCIOS */
+
+.markdown ul{
+    padding:0;
+    margin-top:20px;
+}
+
+.markdown li{
+    list-style:none;
+    background:#111111;
+    margin-bottom:18px;
+    padding:22px;
+    border-radius:20px;
+    border-left:6px solid #00ff88;
+    line-height:2;
+    font-size:18px;
+    box-shadow:0 0 12px rgba(0,255,136,0.15);
+}
+
+/* TEXTOS */
+
+.markdown p{
+    background:#0d0d0d;
+    padding:22px;
+    border-radius:18px;
+    line-height:2;
+    font-size:18px;
+    color:#f1f1f1;
+    margin-top:18px;
+}
+
+/* DESTAQUES */
+
+.markdown strong{
+    color:#00ff88;
+    font-size:18px;
+}
+
+/* LOADING */
+
+#loading{
+    margin-top:20px;
+    background:#111;
+    padding:18px;
+    border-radius:15px;
+    text-align:center;
+    color:#00ff88;
+    font-weight:bold;
+    display:none;
+}
