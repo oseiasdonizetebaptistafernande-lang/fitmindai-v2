@@ -20,81 +20,60 @@ def gerar():
     altura = request.form.get("altura")
     nivel = request.form.get("nivel")
 
-    segunda = request.form.get("segunda")
-    terca = request.form.get("terca")
-    quarta = request.form.get("quarta")
-    quinta = request.form.get("quinta")
-    sexta = request.form.get("sexta")
+    treino = {
+        "segunda": {
+            "titulo": "Peito",
+            "exercicios": [
+                ["Supino Inclinado", "3", "12"],
+                ["Supino Reto", "3", "12"],
+                ["Crucifixo", "3", "12"]
+            ]
+        },
 
-    prompt = f"""
-Você é um personal trainer profissional.
+        "terca": {
+            "titulo": "Costas",
+            "exercicios": [
+                ["Puxada Frontal", "3", "12"],
+                ["Remada Curvada", "3", "12"],
+                ["Pulldown", "3", "12"]
+            ]
+        },
 
-Crie um plano de treino COMPLETAMENTE EM HTML.
+        "quarta": {
+            "titulo": "Pernas",
+            "exercicios": [
+                ["Agachamento", "4", "12"],
+                ["Leg Press", "4", "10"],
+                ["Mesa Flexora", "3", "12"]
+            ]
+        },
 
-NÃO use markdown.
-NÃO use texto puro.
+        "quinta": {
+            "titulo": "Ombros",
+            "exercicios": [
+                ["Desenvolvimento", "3", "12"],
+                ["Elevação Lateral", "3", "12"],
+                ["Arnold Press", "3", "10"]
+            ]
+        },
 
-Crie um visual organizado.
-
-Use:
-
-<div>
-<h2>
-<h3>
-<table>
-<tr>
-<td>
-<ul>
-<li>
-
-Organize:
-
-- informações do cliente
-- divisão dos treinos
-- exercícios
-- séries
-- repetições
-- descanso
-- cardio
-- alimentação
-
-Cada treino deve ficar separado.
-
-Crie tabelas para exercícios.
-
-Cliente:
-
-Objetivo: {objetivo}
-Peso: {peso}
-Altura: {altura}
-Nível: {nivel}
-
-Treinos:
-
-Segunda: {segunda}
-Terça: {terca}
-Quarta: {quarta}
-Quinta: {quinta}
-Sexta: {sexta}
-
-"""
-
-    resposta = client.chat.completions.create(
-        model="llama3-70b-8192",
-        messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-        temperature=0.7
-    )
-
-    resultado = resposta.choices[0].message.content
+        "sexta": {
+            "titulo": "Braços",
+            "exercicios": [
+                ["Rosca Direta", "3", "12"],
+                ["Tríceps Pulley", "3", "12"],
+                ["Rosca Martelo", "3", "12"]
+            ]
+        }
+    }
 
     return render_template(
         "index.html",
-        resposta=resultado
+        objetivo=objetivo,
+        peso=peso,
+        altura=altura,
+        nivel=nivel,
+        treino=treino
     )
 
 if __name__ == "__main__":
