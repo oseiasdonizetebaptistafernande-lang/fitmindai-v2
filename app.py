@@ -22,7 +22,7 @@ def gerar():
     dias = request.form.get("dias")
 
     prompt = f"""
-    Monte um plano de treino MUITO ORGANIZADO e BONITO.
+    Crie um plano de treino completo e organizado.
 
     Objetivo: {objetivo}
     Peso: {peso}
@@ -32,16 +32,11 @@ def gerar():
 
     Quero:
     - divisão dos treinos
-    - aquecimento
     - exercícios
     - séries
     - repetições
     - cardio
-    - descanso
     - alimentação
-    - dica extra
-
-    Organize igual aplicativo premium fitness.
     """
 
     resposta = client.chat.completions.create(
@@ -51,9 +46,7 @@ def gerar():
                 "role": "user",
                 "content": prompt
             }
-        ],
-        temperature=0.7,
-        max_tokens=3000
+        ]
     )
 
     treino = resposta.choices[0].message.content
