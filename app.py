@@ -8,15 +8,15 @@ app = Flask(__name__)
 app.secret_key = "fitmindai"
 
 # =========================
-# API DA GROQ
+# API GROQ
 # =========================
 
 client = Groq(
-    api_key=os.getenv("API_KEY")
+    api_key=os.getenv("GROQ_API_KEY")
 )
 
 # =========================
-# BANCO DE DADOS
+# CRIAR BANCO
 # =========================
 
 def criar_banco():
@@ -51,6 +51,7 @@ def login():
         senha = request.form.get("senha")
 
         conn = sqlite3.connect("usuarios.db")
+
         cursor = conn.cursor()
 
         cursor.execute(
@@ -106,6 +107,7 @@ def cadastro():
 def home():
 
     if "usuario" not in session:
+
         return redirect("/")
 
     return render_template(
@@ -121,12 +123,14 @@ def home():
 def gerar():
 
     if "usuario" not in session:
+
         return redirect("/")
 
     objetivo = request.form.get("objetivo")
     peso = request.form.get("peso")
     altura = request.form.get("altura")
-    intensidade = request.form.get("intensidade")
+    nivel = request.form.get("nivel")
+    dias = request.form.get("dias")
 
     segunda = request.form.get("segunda")
     terca = request.form.get("terca")
@@ -148,10 +152,13 @@ Peso:
 Altura:
 {altura}
 
-Intensidade:
-{intensidade}
+Nível:
+{nivel}
 
-DIVISÃO:
+Dias disponíveis:
+{dias}
+
+DIVISÃO DOS TREINOS:
 
 Segunda:
 {segunda}
@@ -181,12 +188,12 @@ IMPORTANTE:
 - alimentos proibidos
 - motivação
 
-Deixe tudo bonito.
+Deixe tudo bonito e profissional.
 """
 
     try:
 
-        resposta = client.chat.completions.create(
+        resposta_ia = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
                 {
@@ -196,7 +203,7 @@ Deixe tudo bonito.
             ]
         )
 
-        treino = resposta.choices[0].message.content
+        treino = resposta_ia.choices[0].message.content
 
     except Exception as erro:
 
@@ -208,7 +215,7 @@ Erro da IA:
 
     return render_template(
         "index.html",
-        treino=treino,
+        resposta=treino,
         usuario=session["usuario"]
     )
 
@@ -228,4 +235,5 @@ def logout():
 # =========================
 
 if __name__ == "__main__":
+
     app.run(host="0.0.0.0", port=5000)
