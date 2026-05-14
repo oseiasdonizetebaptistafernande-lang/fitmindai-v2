@@ -1,17 +1,106 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>FitMind AI</title>
 
-<link rel="stylesheet"
-href="/static/style.css">
+<link rel="stylesheet" href="/static/style.css">
+
+<style>
+body{
+    margin:0;
+    background:#050505;
+    color:white;
+    font-family:Arial;
+}
+
+.container{
+    display:flex;
+    flex-wrap:wrap;
+    min-height:100vh;
+}
+
+.sidebar{
+    width:320px;
+    background:#0d0d0d;
+    padding:20px;
+    box-shadow:0 0 20px #00ff88;
+}
+
+.logo{
+    font-size:35px;
+    color:#00ff88;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+
+form{
+    display:flex;
+    flex-direction:column;
+}
+
+input,select{
+    margin-bottom:15px;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    background:#1b1b1b;
+    color:white;
+    font-size:15px;
+}
+
+button{
+    background:#00ff88;
+    border:none;
+    padding:15px;
+    border-radius:10px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.main{
+    flex:1;
+    padding:30px;
+}
+
+.titulo{
+    font-size:40px;
+    color:#00ff88;
+    margin-bottom:20px;
+}
+
+.card{
+    background:#111;
+    border:1px solid #00ff88;
+    border-radius:15px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 0 10px #00ff88;
+}
+
+.card h2{
+    color:#00ff88;
+}
+
+.resultado{
+    white-space:pre-wrap;
+    line-height:1.8;
+    font-size:15px;
+}
+
+@media(max-width:900px){
+    .container{
+        flex-direction:column;
+    }
+
+    .sidebar{
+        width:100%;
+    }
+}
+</style>
 
 </head>
 
@@ -19,89 +108,35 @@ href="/static/style.css">
 
 <div class="container">
 
-<h1>FitMind AI 🔥</h1>
+<div class="sidebar">
 
-<p>
-Bem-vindo {{ usuario }}
-</p>
+<div class="logo">
+FitMind AI 🔥
+</div>
 
-<form action="/gerar" method="POST">
+<form method="POST" action="/gerar">
 
-<input
-type="text"
-name="objetivo"
-placeholder="Seu objetivo"
-required
->
+<input type="text" name="objetivo" placeholder="Seu objetivo">
 
-<input
-type="text"
-name="peso"
-placeholder="Seu peso"
-required
->
+<input type="text" name="peso" placeholder="Seu peso">
 
-<input
-type="text"
-name="altura"
-placeholder="Sua altura"
-required
->
+<input type="text" name="altura" placeholder="Sua altura">
 
-<select name="intensidade">
-
-<option value="leve">
-Leve
-</option>
-
-<option value="moderado">
-Moderado
-</option>
-
-<option value="pesado">
-Pesado
-</option>
-
-<option value="extremo">
-Extremo
-</option>
-
+<select name="nivel">
+<option>Leve</option>
+<option>Moderado</option>
+<option>Pesado</option>
 </select>
 
-<input
-type="text"
-name="segunda"
-placeholder="Treino de segunda"
-required
->
+<input type="text" name="segunda" placeholder="Treino de segunda">
 
-<input
-type="text"
-name="terca"
-placeholder="Treino de terça"
-required
->
+<input type="text" name="terca" placeholder="Treino de terça">
 
-<input
-type="text"
-name="quarta"
-placeholder="Treino de quarta"
-required
->
+<input type="text" name="quarta" placeholder="Treino de quarta">
 
-<input
-type="text"
-name="quinta"
-placeholder="Treino de quinta"
-required
->
+<input type="text" name="quinta" placeholder="Treino de quinta">
 
-<input
-type="text"
-name="sexta"
-placeholder="Treino de sexta"
-required
->
+<input type="text" name="sexta" placeholder="Treino de sexta">
 
 <button type="submit">
 Gerar treino
@@ -109,19 +144,28 @@ Gerar treino
 
 </form>
 
-{% if treino %}
+</div>
+
+<div class="main">
+
+<div class="titulo">
+Seu Plano de Treino
+</div>
+
+{% if resposta %}
+
+<div class="card">
+<h2>Treino personalizado</h2>
 
 <div class="resultado">
-
-<pre>{{ treino }}</pre>
+{{ resposta }}
+</div>
 
 </div>
 
 {% endif %}
 
-<a href="/logout">
-Sair
-</a>
+</div>
 
 </div>
 
