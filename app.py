@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session
 from groq import Groq
 import sqlite3
 import os
+import markdown
 
 app = Flask(__name__)
 
@@ -141,7 +142,15 @@ def gerar():
     prompt = f"""
 Você é um personal trainer profissional.
 
-Crie um treino EXTREMAMENTE ORGANIZADO.
+Crie um treino extremamente organizado e bonito.
+
+Use:
+
+# títulos
+## subtítulos
+- listas
+- divisões organizadas
+- separações profissionais
 
 Objetivo:
 {objetivo}
@@ -188,7 +197,7 @@ IMPORTANTE:
 - alimentos proibidos
 - motivação
 
-Deixe tudo bonito e profissional.
+Deixe tudo moderno e profissional.
 """
 
     try:
@@ -203,14 +212,15 @@ Deixe tudo bonito e profissional.
             ]
         )
 
-        treino = resposta_ia.choices[0].message.content
+        treino = markdown.markdown(
+            resposta_ia.choices[0].message.content
+        )
 
     except Exception as erro:
 
         treino = f"""
-Erro da IA:
-
-{erro}
+<h2>Erro da IA</h2>
+<p>{erro}</p>
 """
 
     return render_template(
