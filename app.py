@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 client = Groq(
-    api_key=os.getenv("GROQ_API_KEY")
+    api_key=os.environ.get("GROQ_API_KEY")
 )
 
 @app.route("/")
@@ -19,61 +19,53 @@ def gerar():
     peso = request.form.get("peso")
     altura = request.form.get("altura")
     nivel = request.form.get("nivel")
+    dias = request.form.get("dias")
 
-    treino = {
-        "segunda": {
-            "titulo": "Peito",
-            "exercicios": [
-                ["Supino Inclinado", "3", "12"],
-                ["Supino Reto", "3", "12"],
-                ["Crucifixo", "3", "12"]
-            ]
-        },
+    prompt = f"""
+    Monte um plano de treino MUITO ORGANIZADO e BONITO.
 
-        "terca": {
-            "titulo": "Costas",
-            "exercicios": [
-                ["Puxada Frontal", "3", "12"],
-                ["Remada Curvada", "3", "12"],
-                ["Pulldown", "3", "12"]
-            ]
-        },
+    Objetivo: {objetivo}
+    Peso: {peso}
+    Altura: {altura}
+    Nível: {nivel}
+    Dias disponíveis: {dias}
 
-        "quarta": {
-            "titulo": "Pernas",
-            "exercicios": [
-                ["Agachamento", "4", "12"],
-                ["Leg Press", "4", "10"],
-                ["Mesa Flexora", "3", "12"]
-            ]
-        },
+    Quero:
+    - divisão dos treinos
+    - aquecimento
+    - exercícios
+    - séries
+    - repetições
+    - cardio
+    - descanso
+    - alimentação
+    - dica extra
 
-        "quinta": {
-            "titulo": "Ombros",
-            "exercicios": [
-                ["Desenvolvimento", "3", "12"],
-                ["Elevação Lateral", "3", "12"],
-                ["Arnold Press", "3", "10"]
-            ]
-        },
+    Organize igual aplicativo premium fitness.
+    """
 
-        "sexta": {
-            "titulo": "Braços",
-            "exercicios": [
-                ["Rosca Direta", "3", "12"],
-                ["Tríceps Pulley", "3", "12"],
-                ["Rosca Martelo", "3", "12"]
-            ]
-        }
-    }
+    resposta = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        temperature=0.7,
+        max_tokens=3000
+    )
+
+    treino = resposta.choices[0].message.content
 
     return render_template(
-        "index.html",
+        "resultado.html",
+        treino=treino,
         objetivo=objetivo,
         peso=peso,
         altura=altura,
         nivel=nivel,
-        treino=treino
+        dias=dias
     )
 
 if __name__ == "__main__":
